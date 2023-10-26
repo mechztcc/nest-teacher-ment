@@ -9,8 +9,16 @@ export class CreateUserDto {
   @IsNotEmpty()
   name: string;
 
+  @IsNotEmpty()
+  role: Roles;
+
   @IsString()
   @IsNotEmpty()
   @MinLength(6)
   password: string;
+}
+
+enum Roles {
+  TEACHER = 'TEACHER',
+  STUDENT = 'STUDENT',
 }

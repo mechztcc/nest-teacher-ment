@@ -26,6 +26,10 @@ export class AddMemberService {
       throw new NotFoundException('User not found.');
     }
 
+    if (userExists.role == 'TEACHER') {
+      throw new ConflictException('Its not possible add a TEACHER as Member.');
+    }
+
     const userOnTeamExists = await this.prisma.usersOnTeams.findMany({
       where: { teamId: payload.teamId, userId: payload.userId },
     });
