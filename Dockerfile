@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:buster as development
 
 RUN npm install -g @nestjs/cli@10.0.0
 
