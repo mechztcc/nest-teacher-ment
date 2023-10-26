@@ -27,8 +27,11 @@ export class CreateSessionService {
     const payload = { id: userExists.id, email: userExists.email };
 
     return {
-      user: { ...userExists, password: null },
-      token: await this.jwtService.signAsync(payload),
+      user: {
+        name: userExists.name,
+        email: userExists.email,
+        token: await this.jwtService.signAsync(payload),
+      },
     };
   }
 }
