@@ -20,7 +20,7 @@ export class CreateUserService {
     const hashedPass = await bcrypt.hash(payload.password, 10);
 
     const user = this.prisma.user.create({
-      data: { ...payload, password: hashedPass },
+      data: { ...payload, password: hashedPass, role: 'TEACHER' },
     });
 
     return user;
