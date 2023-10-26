@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 export class CreateUserService {
   constructor(private prisma: PrismaService) {}
 
-  async store(payload: CreateUserDto): Promise<any> {
+  async execute(payload: CreateUserDto): Promise<any> {
     const userExists = await this.prisma.user.findUnique({
       where: { email: payload.email },
     });

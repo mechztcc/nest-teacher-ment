@@ -8,6 +8,6 @@ export class UsersController {
 
   @Post()
   async create(@Body() payload: CreateUserDto): Promise<any> {
-    return this.createUserService.store(payload);
+    return this.createUserService.execute(payload);
   }
 }
