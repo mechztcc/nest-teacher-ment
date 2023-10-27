@@ -7,7 +7,11 @@ export class IndexTeamService {
 
   execute() {
     return this.prisma.team.findMany({
-      include: { UsersOnTeams: { include: { user: true } } },
+      include: {
+        UsersOnTeams: {
+          include: { user: { select: { name: true, email: true } } },
+        },
+      },
     });
   }
 }
