@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/PrismaClient';
 import { CreateQuestionDto } from '../../dto/create-question.dto';
 
@@ -8,6 +8,13 @@ export class CreateQuestionService {
 
   async execute({ alternatives, title, topic }: CreateQuestionDto) {
     const fakeFiles = [];
+
+    const topicExists = await this.prisma.topic.findUnique({
+      where: { id: topic },
+    });
+    if (!topicExists) {
+      throw new NotFoundException('Topic not found.');
+    }
 
     const question = await this.prisma.question.create({
       data: { title: title, topicId: topic, userId: 1 },
