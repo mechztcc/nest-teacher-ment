@@ -6,9 +6,10 @@ import { CreateQuestionDto } from '../../dto/create-question.dto';
 export class CreateQuestionService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute({ alternatives, title, topic }: CreateQuestionDto) {
-    const fakeFiles = [];
-
+  async execute(
+    { alternatives, title, topic }: CreateQuestionDto,
+    userId: number,
+  ) {
     const topicExists = await this.prisma.topic.findUnique({
       where: { id: topic },
     });
@@ -17,7 +18,7 @@ export class CreateQuestionService {
     }
 
     const question = await this.prisma.question.create({
-      data: { title: title, topicId: topic, userId: 1 },
+      data: { title: title, topicId: topic, userId },
     });
 
     const bulkAlternatives = alternatives.map((alternative) => {
@@ -27,8 +28,21 @@ export class CreateQuestionService {
       };
     });
 
-    const image = await this.prisma.questionImage.create({
-      data: { name: 'name', path: 'path', questionId: question.id },
+    const bulkImages = [
+      {
+        name: 'Image 1',
+        path: 'https://www.telegraph.co.uk/content/dam/news/2016/05/15/Maths-problem-trending_trans_NvBQzQNjv4BqzTW4Ql1t-1Xt3_aTCx9yp4V4XZMU8yV22wInfrfUWRg.PNG',
+        questionId: question.id,
+      },
+      {
+        name: 'Image 1',
+        path: 'https://www.telegraph.co.uk/content/dam/news/2016/05/15/Maths-problem-trending_trans_NvBQzQNjv4BqzTW4Ql1t-1Xt3_aTCx9yp4V4XZMU8yV22wInfrfUWRg.PNG',
+        questionId: question.id,
+      },
+    ];
+
+    const images = await this.prisma.questionImage.createMany({
+      data: bulkImages,
     });
 
     const alternative = await this.prisma.alternative.createMany({
@@ -37,7 +51,7 @@ export class CreateQuestionService {
 
     return {
       title: question.title,
-      images: [image],
+      images: [images],
       alternatives: alternative,
     };
   }

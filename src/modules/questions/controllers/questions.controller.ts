@@ -1,7 +1,16 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UseInterceptors,
+  Headers,
+} from '@nestjs/common';
 import { CreateQuestionDto } from '../dto/create-question.dto';
 import { CreateQuestionService } from '../services/create-question/create-question.service';
 import { FindQuestionService } from '../services/find-question/find-question.service';
+import { AuthorizationInterceptor } from 'src/shared/interceptors/authorization/authorization.interceptor';
 
 @Controller('questions')
 export class QuestionsController {
@@ -11,8 +20,10 @@ export class QuestionsController {
   ) {}
 
   @Post()
-  store(@Body() payload: CreateQuestionDto) {
-    return this.createQuestion.execute(payload);
+  @UseInterceptors(AuthorizationInterceptor)
+  store(@Body() payload: CreateQuestionDto, @Headers() headers) {
+    const user = headers.user;
+    return this.createQuestion.execute(payload, user.id);
   }
 
   @Get(':id')
