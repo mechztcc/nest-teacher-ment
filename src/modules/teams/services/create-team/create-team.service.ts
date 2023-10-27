@@ -6,7 +6,9 @@ import { CreateTeamDto } from '../../dtos/create-team.dto';
 export class CreateTeamService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async execute(payload: CreateTeamDto) {
-    return await this.prisma.team.create({ data: payload });
+  async execute(payload: CreateTeamDto, userId: number) {
+    return await this.prisma.team.create({
+      data: { ...payload, ownerId: userId },
+    });
   }
 }

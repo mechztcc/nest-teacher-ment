@@ -7,9 +7,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { TeamsModule } from './modules/teams/teams.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { TopicModule } from './modules/topic/topic.module';
+import { LessonsModule } from './modules/lessons/lessons.module';
 
 @Module({
-  imports: [UsersModule, PrismaModule, AuthModule, TeamsModule, QuestionsModule, TopicModule],
+  imports: [UsersModule, PrismaModule, AuthModule, TeamsModule, QuestionsModule, TopicModule, LessonsModule],
   controllers: [AppController],
   providers: [AppService],
 })

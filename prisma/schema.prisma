@@ -21,14 +21,19 @@ model User {
   updatedAt    DateTime       @updatedAt
   UsersOnTeams UsersOnTeams[]
   questions    Question[]
+  Team         Team[]
+  Lesson       Lesson[]
 }
 
 model Team {
   id           Int            @id @default(autoincrement())
   name         String
+  owner        User           @relation(fields: [ownerId], references: [id])
+  ownerId      Int
   UsersOnTeams UsersOnTeams[]
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
+  Lesson       Lesson[]
 }
 
 model UsersOnTeams {
@@ -54,6 +59,8 @@ model Question {
   topicId       Int
   topic         Topic           @relation(fields: [topicId], references: [id])
   QuestionImage QuestionImage[]
+  Lesson        Lesson?         @relation(fields: [lessonId], references: [id])
+  lessonId      Int?
 }
 
 model QuestionImage {
@@ -82,4 +89,17 @@ model Topic {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   Question  Question[]
+}
+
+model Lesson {
+  id        Int        @id @default(autoincrement())
+  owner     User       @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+  name      String
+  questions Question[]
+  team      Team       @relation(fields: [teamId], references: [id])
+  teamId    Int
+  isOpened  Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
