@@ -7,7 +7,7 @@ export class CreateQuestionService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(
-    { alternatives, title, topic }: CreateQuestionDto,
+    { alternatives, title, topic, lessonId }: CreateQuestionDto,
     userId: number,
   ) {
     const topicExists = await this.prisma.topic.findUnique({
@@ -15,6 +15,13 @@ export class CreateQuestionService {
     });
     if (!topicExists) {
       throw new NotFoundException('Topic not found.');
+    }
+
+    const lessonExists = await this.prisma.lesson.findUnique({
+      where: { id: lessonId },
+    });
+    if (!lessonExists) {
+      throw new NotFoundException('Lesson not found.');
     }
 
     const bulkImages = [
@@ -32,6 +39,7 @@ export class CreateQuestionService {
       data: {
         title: title,
         topicId: topic,
+        lessonId: lessonId,
         userId,
         QuestionImage: { createMany: { data: bulkImages } },
         alternatives: {

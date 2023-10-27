@@ -11,4 +11,8 @@ export class CreateQuestionDto {
   @IsNotEmpty()
   @IsNumber()
   topic: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  lessonId: number;
 }
