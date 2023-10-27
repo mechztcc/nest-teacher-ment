@@ -12,6 +12,7 @@ import { AddMemberService } from '../services/add-member/add-member.service';
 import { CreateTeamService } from '../services/create-team/create-team.service';
 import { IndexTeamService } from '../services/index/index.service';
 import { AuthorizationInterceptor } from 'src/shared/interceptors/authorization/authorization.interceptor';
+import { FindByOwnerService } from '../services/find-by-owner/find-by-owner.service';
 
 @Controller('teams')
 export class TeamsController {
@@ -19,6 +20,7 @@ export class TeamsController {
     private readonly createTeam: CreateTeamService,
     private readonly addMember: AddMemberService,
     private readonly indexTeam: IndexTeamService,
+    private readonly findTeamByOwner: FindByOwnerService,
   ) {}
 
   @Post()
@@ -36,5 +38,13 @@ export class TeamsController {
   @Get()
   async index() {
     return this.indexTeam.execute();
+  }
+
+  @Get('owner')
+  @UseInterceptors(AuthorizationInterceptor)
+  async findByOwner(@Headers() headers) {
+    const { user } = headers;
+
+    return this.findTeamByOwner.execute(user.id);
   }
 }
