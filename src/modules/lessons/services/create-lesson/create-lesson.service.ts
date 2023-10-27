@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/PrismaClient';
 import { CreateLessonDto } from '../../dto/create-lesson.dto';
 
@@ -11,8 +15,14 @@ export class CreateLessonService {
       where: { id: payload.teamId },
     });
 
-    if (teamExists) {
+    if (!teamExists) {
       throw new NotFoundException('Provided Team has not found.');
+    }
+
+    if (teamExists.ownerId !== userId) {
+      throw new UnauthorizedException(
+        'Provided User its not the Owner of this Team',
+      );
     }
 
     return this.prisma.lesson.create({ data: { ...payload, ownerId: userId } });
