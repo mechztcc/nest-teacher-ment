@@ -99,6 +99,7 @@ model Lesson {
   questions Question[]
   team      Team       @relation(fields: [teamId], references: [id])
   teamId    Int
+  level     Int
   isOpened  Boolean    @default(false)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
