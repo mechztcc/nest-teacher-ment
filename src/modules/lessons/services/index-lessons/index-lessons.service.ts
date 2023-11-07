@@ -8,7 +8,10 @@ export class IndexLessonsService {
   execute(userId: number): Promise<any> {
     return this.prisma.lesson.findMany({
       where: { ownerId: userId },
-      include: { team: { select: { id: true, name: true } } },
+      include: {
+        team: { select: { id: true, name: true } },
+        questions: { select: { _count: true } },
+      },
     });
   }
 }
