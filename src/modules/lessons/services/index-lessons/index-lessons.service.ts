@@ -10,7 +10,7 @@ export class IndexLessonsService {
       where: { ownerId: userId },
       include: {
         team: { select: { id: true, name: true } },
-        questions: { select: { _count: true } },
+        QuestionsOnLessons: { include: { question: true } },
         difficulty: { select: { id: true, name: true, level: true } },
       },
     });

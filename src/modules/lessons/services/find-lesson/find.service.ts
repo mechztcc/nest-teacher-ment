@@ -11,11 +11,15 @@ export class FindLessonService {
       include: {
         owner: { select: { email: true, name: true } },
         team: { select: { name: true } },
-        questions: {
+        QuestionsOnLessons: {
           include: {
-            alternatives: true,
-            topic: { select: { name: true } },
-            QuestionImage: { select: { name: true, path: true } },
+            question: {
+              include: {
+                alternatives: true,
+                topic: { select: { name: true } },
+                QuestionImage: { select: { name: true, path: true } },
+              },
+            },
           },
         },
       },
