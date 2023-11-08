@@ -47,10 +47,6 @@ export class TeamsController {
   @UseInterceptors(AuthorizationInterceptor)
   async find(@Headers() headers, @Param('id') id: string) {
     const { user } = headers;
-
-    console.log(id);
-    
-
     return this.findById.execute(user.id, Number(id));
   }
 

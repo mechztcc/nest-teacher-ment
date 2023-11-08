@@ -14,7 +14,11 @@ export class FindService {
       where: { id: id },
       include: {
         UsersOnTeams: true,
-        Lesson: true,
+        Lesson: {
+          include: {
+            difficulty: { select: { id: true, name: true, level: true } },
+          },
+        },
         owner: { select: { name: true, id: true, email: true } },
       },
     });
