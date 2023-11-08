@@ -48,19 +48,28 @@ model UsersOnTeams {
 }
 
 model Question {
-  id     Int    @id @default(autoincrement())
-  title  String
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int
+  id                 Int                  @id @default(autoincrement())
+  title              String
+  user               User                 @relation(fields: [userId], references: [id])
+  userId             Int
+  alternatives       Alternative[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  topicId            Int
+  topic              Topic                @relation(fields: [topicId], references: [id])
+  QuestionImage      QuestionImage[]
+  QuestionsOnLessons QuestionsOnLessons[]
+}
 
-  alternatives  Alternative[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  topicId       Int
-  topic         Topic           @relation(fields: [topicId], references: [id])
-  QuestionImage QuestionImage[]
-  Lesson        Lesson?         @relation(fields: [lessonId], references: [id])
-  lessonId      Int?
+model QuestionsOnLessons {
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  lessonId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@id([questionId, lessonId])
 }
 
 model QuestionImage {
@@ -92,18 +101,18 @@ model Topic {
 }
 
 model Lesson {
-  id           Int        @id @default(autoincrement())
-  owner        User       @relation(fields: [ownerId], references: [id])
-  ownerId      Int
-  name         String
-  questions    Question[]
-  team         Team       @relation(fields: [teamId], references: [id])
-  teamId       Int
-  difficulty   Difficulty @relation(fields: [difficultyId], references: [id])
-  difficultyId Int
-  isOpened     Boolean    @default(false)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id                 Int                  @id @default(autoincrement())
+  owner              User                 @relation(fields: [ownerId], references: [id])
+  ownerId            Int
+  name               String
+  team               Team                 @relation(fields: [teamId], references: [id])
+  teamId             Int
+  difficulty         Difficulty           @relation(fields: [difficultyId], references: [id])
+  difficultyId       Int
+  isOpened           Boolean              @default(false)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  QuestionsOnLessons QuestionsOnLessons[]
 }
 
 model Difficulty {
