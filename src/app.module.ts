@@ -1,16 +1,26 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './modules/users/users.module';
-import { PrismaModule } from './modules/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { TeamsModule } from './modules/teams/teams.module';
-import { QuestionsModule } from './modules/questions/questions.module';
-import { TopicModule } from './modules/topic/topic.module';
+import { DifficultiesModule } from './modules/difficulties/difficulties.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
+import { PrismaModule } from './modules/prisma/prisma.module';
+import { QuestionsModule } from './modules/questions/questions.module';
+import { TeamsModule } from './modules/teams/teams.module';
+import { TopicModule } from './modules/topic/topic.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
-  imports: [UsersModule, PrismaModule, AuthModule, TeamsModule, QuestionsModule, TopicModule, LessonsModule],
+  imports: [
+    UsersModule,
+    PrismaModule,
+    AuthModule,
+    TeamsModule,
+    QuestionsModule,
+    TopicModule,
+    LessonsModule,
+    DifficultiesModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

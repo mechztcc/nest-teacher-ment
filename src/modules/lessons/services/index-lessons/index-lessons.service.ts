@@ -11,6 +11,7 @@ export class IndexLessonsService {
       include: {
         team: { select: { id: true, name: true } },
         questions: { select: { _count: true } },
+        difficulty: { select: { id: true, name: true } },
       },
     });
   }

@@ -1,15 +1,11 @@
 import { IsNotEmpty, IsNumber, Max } from 'class-validator';
 
-export class CreateLessonDto {
+export class CreateDifficultyDto {
   @IsNotEmpty()
   name: string;
 
   @IsNotEmpty()
   @IsNumber()
-  teamId: number;
-
-  @IsNotEmpty()
-  @IsNumber()
   @Max(5)
-  difficultyId: number;
+  level: number;
 }

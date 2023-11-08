@@ -92,15 +92,25 @@ model Topic {
 }
 
 model Lesson {
-  id        Int        @id @default(autoincrement())
-  owner     User       @relation(fields: [ownerId], references: [id])
-  ownerId   Int
+  id           Int        @id @default(autoincrement())
+  owner        User       @relation(fields: [ownerId], references: [id])
+  ownerId      Int
+  name         String
+  questions    Question[]
+  team         Team       @relation(fields: [teamId], references: [id])
+  teamId       Int
+  difficulty   Difficulty @relation(fields: [difficultyId], references: [id])
+  difficultyId Int
+  isOpened     Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Difficulty {
+  id        Int      @id @default(autoincrement())
   name      String
-  questions Question[]
-  team      Team       @relation(fields: [teamId], references: [id])
-  teamId    Int
   level     Int
-  isOpened  Boolean    @default(false)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  Lesson    Lesson[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

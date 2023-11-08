@@ -25,6 +25,14 @@ export class CreateLessonService {
       );
     }
 
+    const difficultyExists = await this.prisma.difficulty.findUnique({
+      where: { id: payload.difficultyId },
+    });
+
+    if (!difficultyExists) {
+      throw new NotFoundException('Provided difficulty has not found.');
+    }
+
     return this.prisma.lesson.create({ data: { ...payload, ownerId: userId } });
   }
 }
