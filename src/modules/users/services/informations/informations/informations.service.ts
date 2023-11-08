@@ -11,7 +11,14 @@ export class InformationsService {
       where: { ownerId: id },
       include: { UsersOnTeams: { include: { user: true } } },
     });
+    const lessonsCount = await this.prisma.lesson.count({
+      where: { ownerId: id },
+    });
 
-    return { teamsCount: teamsCount, studentsCount: 0 };
+    return {
+      teamsCount: teamsCount,
+      studentsCount: 0,
+      lessonsCount: lessonsCount,
+    };
   }
 }

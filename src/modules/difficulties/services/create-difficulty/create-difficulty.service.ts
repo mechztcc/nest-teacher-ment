@@ -8,7 +8,7 @@ export class CreateDifficultyService {
 
   async execute(payload: CreateDifficultyDto): Promise<any> {
     return await this.prisma.difficulty.create({
-      data: { level: 1, name: payload.name },
+      data: { level: payload.level, name: payload.name },
     });
   }
 }

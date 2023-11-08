@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, Max } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateLessonDto {
   @IsNotEmpty()
@@ -10,6 +10,5 @@ export class CreateLessonDto {
 
   @IsNotEmpty()
   @IsNumber()
-  @Max(5)
   difficultyId: number;
 }
