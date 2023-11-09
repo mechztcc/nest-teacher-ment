@@ -8,11 +8,12 @@ export class FindByEmailService {
   async execute(email: string): Promise<any> {
     const userExists = await this.prisma.user.findUnique({
       where: { email, role: 'STUDENT' },
+      include: { UsersOnTeams: true },
     });
 
     if (!userExists) {
       return {
-        notFound: true,
+        message: 'User not found.',
       };
     }
 
