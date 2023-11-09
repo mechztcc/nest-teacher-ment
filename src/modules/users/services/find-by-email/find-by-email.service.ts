@@ -10,6 +10,12 @@ export class FindByEmailService {
       where: { email, role: 'STUDENT' },
     });
 
+    if (!userExists) {
+      return {
+        notFound: true,
+      };
+    }
+
     return userExists;
   }
 }
