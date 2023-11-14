@@ -6,6 +6,7 @@ import {
   Post,
   UseInterceptors,
   Headers,
+  Delete,
 } from '@nestjs/common';
 import { CreateQuestionDto } from '../dto/create-question.dto';
 import { CreateQuestionService } from '../services/create-question/create-question.service';
@@ -27,6 +28,7 @@ export class QuestionsController {
     const user = headers.user;
     return this.createQuestion.execute(payload, user.id);
   }
+
   
   @Get('owner')
   @UseInterceptors(AuthorizationInterceptor)

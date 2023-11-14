@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/PrismaClient';
 import { AddQuestionDto } from '../../dto/add-question.dto';
 
@@ -19,6 +23,22 @@ export class AddQuestionService {
     });
     if (!lessonExists) {
       throw new NotFoundException('Provided lesson has not found.');
+    }
+
+    const questionOnLessonsExists =
+      await this.prisma.questionsOnLessons.findUnique({
+        where: {
+          questionId_lessonId: {
+            lessonId: payload.lessonId,
+            questionId: payload.questionId,
+          },
+        },
+      });
+
+    if (questionOnLessonsExists) {
+      throw new ConflictException(
+        'Provided question is already registered on this lesson',
+      );
     }
 
     const questionOnLesson = await this.prisma.questionsOnLessons.create({
