@@ -5,6 +5,7 @@ import {
   Headers,
   Param,
   Post,
+  Put,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthorizationInterceptor } from 'src/shared/interceptors/authorization/authorization.interceptor';
@@ -14,6 +15,7 @@ import { CreateLessonService } from '../services/create-lesson/create-lesson.ser
 import { FindLessonService } from '../services/find-lesson/find.service';
 import { IndexLessonsService } from '../services/index-lessons/index-lessons.service';
 import { AddQuestionDto } from '../dto/add-question.dto';
+import { RemoveQuestionService } from '../services/remove-question/remove-question.service';
 
 @Controller('lessons')
 export class LessonsController {
@@ -22,6 +24,7 @@ export class LessonsController {
     private readonly findLesson: FindLessonService,
     private readonly indexLessons: IndexLessonsService,
     private readonly addQuestionService: AddQuestionService,
+    private readonly removeQuestionService: RemoveQuestionService,
   ) {}
 
   @Post()
@@ -34,6 +37,11 @@ export class LessonsController {
   @Post('add-question')
   addQuestion(@Body() payload: AddQuestionDto) {
     return this.addQuestionService.execute(payload);
+  }
+
+  @Put('remove-question')
+  removeQuestion(@Body() payload: AddQuestionDto) {
+    return this.removeQuestionService.execute(payload);
   }
 
   @Get(':id')
