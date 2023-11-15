@@ -5,8 +5,8 @@ import { PrismaService } from 'src/modules/prisma/PrismaClient';
 export class FindLessonService {
   constructor(private readonly prisma: PrismaService) {}
 
-  execute(id: number) {
-    return this.prisma.lesson.findUnique({
+  async execute(id: number) {
+    const query = await this.prisma.lesson.findUnique({
       where: { id },
       include: {
         owner: { select: { email: true, name: true } },
@@ -16,7 +16,7 @@ export class FindLessonService {
             question: {
               include: {
                 alternatives: true,
-                topic: { select: { name: true } },
+                topic: { select: { id: true, name: true } },
                 QuestionImage: { select: { name: true, path: true } },
               },
             },
@@ -24,5 +24,13 @@ export class FindLessonService {
         },
       },
     });
+
+    let totalPoints = 0;
+
+    query.QuestionsOnLessons.map((el) => {
+      totalPoints += el.question.pontuation;
+    });
+
+    return { ...query, score: totalPoints };
   }
 }
