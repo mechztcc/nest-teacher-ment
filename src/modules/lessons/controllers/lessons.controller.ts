@@ -4,6 +4,7 @@ import {
   Get,
   Headers,
   Param,
+  Patch,
   Post,
   Put,
   UseInterceptors,
@@ -19,6 +20,7 @@ import { RemoveQuestionService } from '../services/remove-question/remove-questi
 import { OpenLessonService } from '../services/open-lesson/open-lesson.service';
 import { log } from 'console';
 import { OpenQuestionDto } from '../dto/open-question.dto';
+import { CloseLessonService } from '../services/close-lesson/close-lesson.service';
 
 @Controller('lessons')
 export class LessonsController {
@@ -29,6 +31,7 @@ export class LessonsController {
     private readonly addQuestionService: AddQuestionService,
     private readonly removeQuestionService: RemoveQuestionService,
     private readonly openLessonService: OpenLessonService,
+    private readonly closeLessonService: CloseLessonService,
   ) {}
 
   @Post()
@@ -67,6 +70,16 @@ export class LessonsController {
     return this.openLessonService.execute({
       expiresAt: payload.expiresAt,
       lessonId: payload.lessonId,
+      userId: user.id,
+    });
+  }
+
+  @Patch('close/:id')
+  @UseInterceptors(AuthorizationInterceptor)
+  closeLesson(@Headers() headers, @Param('id') id: string) {
+    const { user } = headers;
+    return this.closeLessonService.execute({
+      lessonId: Number(id),
       userId: user.id,
     });
   }
