@@ -16,6 +16,8 @@ import { FindLessonService } from '../services/find-lesson/find.service';
 import { IndexLessonsService } from '../services/index-lessons/index-lessons.service';
 import { AddQuestionDto } from '../dto/add-question.dto';
 import { RemoveQuestionService } from '../services/remove-question/remove-question.service';
+import { OpenLessonService } from '../services/open-lesson/open-lesson.service';
+import { log } from 'console';
 
 @Controller('lessons')
 export class LessonsController {
@@ -25,6 +27,7 @@ export class LessonsController {
     private readonly indexLessons: IndexLessonsService,
     private readonly addQuestionService: AddQuestionService,
     private readonly removeQuestionService: RemoveQuestionService,
+    private readonly openLessonService: OpenLessonService,
   ) {}
 
   @Post()
@@ -54,5 +57,14 @@ export class LessonsController {
   index(@Headers() headers) {
     const { user } = headers;
     return this.indexLessons.execute(user.id);
+  }
+
+  @Put('open/:id')
+  @UseInterceptors(AuthorizationInterceptor)
+  openLesson(@Headers() headers, @Param('id') id: string) {
+    console.log(id);
+
+    const { user } = headers;
+    return this.openLessonService.execute(user.id, Number(id));
   }
 }
