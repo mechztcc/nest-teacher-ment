@@ -21,7 +21,9 @@ export class FindService {
         Lesson: {
           include: {
             difficulty: { select: { id: true, name: true, level: true } },
+            ExpirationDate: { take: 1 },
           },
+          where: { isOpened: true },
         },
         owner: { select: { name: true, id: true, email: true } },
       },
