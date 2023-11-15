@@ -18,6 +18,7 @@ import { AddQuestionDto } from '../dto/add-question.dto';
 import { RemoveQuestionService } from '../services/remove-question/remove-question.service';
 import { OpenLessonService } from '../services/open-lesson/open-lesson.service';
 import { log } from 'console';
+import { OpenQuestionDto } from '../dto/open-question.dto';
 
 @Controller('lessons')
 export class LessonsController {
@@ -59,12 +60,14 @@ export class LessonsController {
     return this.indexLessons.execute(user.id);
   }
 
-  @Put('open/:id')
+  @Put('open')
   @UseInterceptors(AuthorizationInterceptor)
-  openLesson(@Headers() headers, @Param('id') id: string) {
-    console.log(id);
-
+  openLesson(@Headers() headers, @Body() payload: OpenQuestionDto) {
     const { user } = headers;
-    return this.openLessonService.execute(user.id, Number(id));
+    return this.openLessonService.execute({
+      expiresAt: payload.expiresAt,
+      lessonId: payload.lessonId,
+      userId: user.id,
+    });
   }
 }
