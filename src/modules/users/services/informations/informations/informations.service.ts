@@ -7,18 +7,23 @@ export class InformationsService {
 
   async execute(id: number): Promise<any> {
     const teamsCount = await this.prisma.team.count({ where: { ownerId: id } });
-    const studentsCount = await this.prisma.team.findMany({
-      where: { ownerId: id },
-      include: { UsersOnTeams: { include: { user: true } } },
-    });
     const lessonsCount = await this.prisma.lesson.count({
       where: { ownerId: id },
+    });
+    const students = await this.prisma.usersOnTeams.count({
+      where: { team: { ownerId: id } },
+    });
+
+    const runningLessons = await this.prisma.lesson.findMany({
+      include: { difficulty: true, ExpirationDate: true, team: { include: { UsersOnTeams: true }} },
+      where: { isOpened: true, ownerId: id },
     });
 
     return {
       teamsCount: teamsCount,
-      studentsCount: 0,
+      studentsCount: students,
       lessonsCount: lessonsCount,
+      runningLessons,
     };
   }
 }

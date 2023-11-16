@@ -26,15 +26,18 @@ export class UsersController {
     return this.createUserService.execute(payload);
   }
 
+  @Get('informations')
+  @UseInterceptors(AuthorizationInterceptor)
+  async info(@Headers() headers): Promise<any> {
+    const { user } = headers;
+
+    return await this.userInformationService.execute(user.id);
+  }
+
+
   @Get(':email')
   async findByEmail(@Param('email') email: string) {
     return this.findByEmailService.execute(email)
   }
 
-  @Get('informations')
-  @UseInterceptors(AuthorizationInterceptor)
-  async info(@Headers() headers): Promise<any> {
-    const { user } = headers;
-    return await this.userInformationService.execute(user.id);
-  }
 }
