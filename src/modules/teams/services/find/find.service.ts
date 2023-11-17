@@ -13,6 +13,7 @@ export class FindService {
     const teamExists = await this.prisma.team.findUnique({
       where: { id: id },
       include: {
+        InvitationCode: { select: { code: true } },
         UsersOnTeams: {
           include: {
             user: { select: { id: true, name: true, email: true, role: true } },
