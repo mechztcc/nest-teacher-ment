@@ -13,7 +13,9 @@ export class CreateSessionService {
   ) {}
 
   async execute({ email, password }: CreateSessionDto): Promise<any> {
-    const userExists = await this.prisma.user.findUnique({ where: { email } });
+    const userExists = await this.prisma.user.findUnique({
+      where: { email },
+    });
 
     if (!userExists) {
       throw new NotFoundException('Invalid credentials.');
@@ -30,6 +32,7 @@ export class CreateSessionService {
       user: {
         name: userExists.name,
         email: userExists.email,
+        role: userExists.role,
         token: await this.jwtService.signAsync(payload),
       },
     };

@@ -6,13 +6,19 @@ export class FindProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(userId: number): Promise<any> {
-    return await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {
         profile: {
           select: { organization: true, city: true, phone: true, state: true },
         },
+        Lesson: true,
+        Team: true
       },
     });
+
+    user.password = null;
+
+    return user;
   }
 }
