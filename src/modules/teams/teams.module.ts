@@ -6,9 +6,10 @@ import { AddMemberService } from './services/add-member/add-member.service';
 import { IndexTeamService } from './services/index/index.service';
 import { FindByOwnerService } from './services/find-by-owner/find-by-owner.service';
 import { FindService } from './services/find/find.service';
+import { JoinTeamWithCodeService } from './services/join-team-with-code/join-team-with-code.service';
 
 @Module({
-  providers: [CreateTeamService, AddMemberService, IndexTeamService, FindByOwnerService, FindService],
+  providers: [CreateTeamService, AddMemberService, IndexTeamService, FindByOwnerService, FindService, JoinTeamWithCodeService],
   controllers: [TeamsController],
   imports: [PrismaModule],
 })

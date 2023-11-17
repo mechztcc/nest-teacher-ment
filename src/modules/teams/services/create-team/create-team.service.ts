@@ -17,8 +17,10 @@ export class CreateTeamService {
       );
     }
 
-    return await this.prisma.team.create({
-      data: { ...payload, ownerId: userId },
+    const team = await this.prisma.team.create({
+      data: { ...payload, ownerId: userId, InvitationCode: { create: {} } },
     });
+
+    return team;
   }
 }
