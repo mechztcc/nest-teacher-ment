@@ -65,6 +65,6 @@ export class TeamsController {
   async joinWithCode(@Headers() headers, @Param(':code') code: string) {
     const { user } = headers;
 
-    return this.joinTeamWithCode.execute(code);
+    return this.joinTeamWithCode.execute({ code: code, userId: user.id });
   }
 }

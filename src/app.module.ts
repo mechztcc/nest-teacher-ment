@@ -5,6 +5,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { DifficultiesModule } from './modules/difficulties/difficulties.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
+import { ProfileModule } from './modules/profile/profile.module';
 import { QuestionsModule } from './modules/questions/questions.module';
 import { TeamsModule } from './modules/teams/teams.module';
 import { TopicModule } from './modules/topic/topic.module';
@@ -20,6 +21,7 @@ import { UsersModule } from './modules/users/users.module';
     TopicModule,
     LessonsModule,
     DifficultiesModule,
+    ProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
