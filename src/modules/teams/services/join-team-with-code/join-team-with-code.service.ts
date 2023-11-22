@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -30,6 +31,18 @@ export class JoinTeamWithCodeService {
     if (user.role !== 'STUDENT') {
       throw new UnprocessableEntityException(
         'Only students can join a team using an invitation code',
+      );
+    }
+
+    const userExistsOnteams = await this.prisma.usersOnTeams.findUnique({
+      where: {
+        userId_teamId: { teamId: inviteCodeExists.teamId, userId: user.id },
+      },
+    });
+
+    if (userExistsOnteams) {
+      throw new ConflictException(
+        'Provided user can only have one team.',
       );
     }
 
