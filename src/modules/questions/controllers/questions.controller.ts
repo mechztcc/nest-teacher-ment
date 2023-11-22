@@ -13,6 +13,8 @@ import { CreateQuestionService } from '../services/create-question/create-questi
 import { FindQuestionService } from '../services/find-question/find-question.service';
 import { AuthorizationInterceptor } from 'src/shared/interceptors/authorization/authorization.interceptor';
 import { FindByTeacherService } from '../services/find-by-teacher/find-by-teacher.service';
+import { VerifyResponseService } from '../services/verify-response/verify-response.service';
+import { VerifyAswerDto } from '../dto/verify-aswer.dto';
 
 @Controller('questions')
 export class QuestionsController {
@@ -20,6 +22,7 @@ export class QuestionsController {
     private readonly createQuestion: CreateQuestionService,
     private readonly findQuestion: FindQuestionService,
     private readonly findByTeacherService: FindByTeacherService,
+    private readonly verifyResponseService: VerifyResponseService,
   ) {}
 
   @Post()
@@ -29,7 +32,6 @@ export class QuestionsController {
     return this.createQuestion.execute(payload, user.id);
   }
 
-  
   @Get('owner')
   @UseInterceptors(AuthorizationInterceptor)
   findByTeacher(@Headers() headers) {
@@ -42,4 +44,14 @@ export class QuestionsController {
     return this.findQuestion.execute(Number(id));
   }
 
+  @Post('verify-answer')
+  @UseInterceptors(AuthorizationInterceptor)
+  verifyResponse(@Headers() headers, @Body() payload: VerifyAswerDto) {
+    const { user } = headers;
+
+    return this.verifyResponseService.execute({
+      data: payload,
+      userId: user.id,
+    });
+  }
 }
