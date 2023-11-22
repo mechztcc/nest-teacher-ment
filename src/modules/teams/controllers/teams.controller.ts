@@ -16,6 +16,7 @@ import { FindByOwnerService } from '../services/find-by-owner/find-by-owner.serv
 import { FindService } from '../services/find/find.service';
 import { IndexTeamService } from '../services/index/index.service';
 import { JoinTeamWithCodeService } from '../services/join-team-with-code/join-team-with-code.service';
+import { FindByStudentService } from '../services/find-by-student/find-by-student.service';
 
 @Controller('teams')
 export class TeamsController {
@@ -26,6 +27,7 @@ export class TeamsController {
     private readonly findTeamByOwner: FindByOwnerService,
     private readonly findById: FindService,
     private readonly joinTeamWithCode: JoinTeamWithCodeService,
+    private readonly findByStudentService: FindByStudentService
   ) {}
 
   @Post()
@@ -62,9 +64,19 @@ export class TeamsController {
 
   @Post('join/:code')
   @UseInterceptors(AuthorizationInterceptor)
-  async joinWithCode(@Headers() headers, @Param(':code') code: string) {
+  async joinWithCode(@Headers() headers, @Param('code') code: string) {
     const { user } = headers;
 
     return this.joinTeamWithCode.execute({ code: code, userId: user.id });
+  }
+
+
+  @Get('student')
+  @UseInterceptors(AuthorizationInterceptor)
+  async findByStudent(@Headers() headers) {
+    const { user } = headers;
+
+    return this.findByStudentService.execute(user.id);
+
   }
 }
