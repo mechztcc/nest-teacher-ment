@@ -8,10 +8,11 @@ import { AddQuestionService } from './services/add-question/add-question.service
 import { RemoveQuestionService } from './services/remove-question/remove-question.service';
 import { OpenLessonService } from './services/open-lesson/open-lesson.service';
 import { CloseLessonService } from './services/close-lesson/close-lesson.service';
+import { FindOpenedByTeamService } from './services/find-opened-by-team/find-opened-by-team.service';
 
 @Module({
   controllers: [LessonsController],
-  providers: [CreateLessonService, FindLessonService, IndexLessonsService, AddQuestionService, RemoveQuestionService, OpenLessonService, CloseLessonService],
+  providers: [CreateLessonService, FindLessonService, IndexLessonsService, AddQuestionService, RemoveQuestionService, OpenLessonService, CloseLessonService, FindOpenedByTeamService],
   imports: [PrismaModule],
 })
 export class LessonsModule {}

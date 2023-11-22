@@ -21,6 +21,7 @@ import { OpenLessonService } from '../services/open-lesson/open-lesson.service';
 import { log } from 'console';
 import { OpenQuestionDto } from '../dto/open-question.dto';
 import { CloseLessonService } from '../services/close-lesson/close-lesson.service';
+import { FindOpenedByTeamService } from '../services/find-opened-by-team/find-opened-by-team.service';
 
 @Controller('lessons')
 export class LessonsController {
@@ -32,6 +33,7 @@ export class LessonsController {
     private readonly removeQuestionService: RemoveQuestionService,
     private readonly openLessonService: OpenLessonService,
     private readonly closeLessonService: CloseLessonService,
+    private readonly findOpenedByTeamService: FindOpenedByTeamService
   ) {}
 
   @Post()
@@ -54,6 +56,14 @@ export class LessonsController {
   @Get(':id')
   find(@Param('id') id: string) {
     return this.findLesson.execute(Number(id));
+  }
+
+  @Get('student/find-by-user')
+  @UseInterceptors(AuthorizationInterceptor)
+  findOpenedByTeam(@Headers() headers) {
+    const { user } = headers;
+
+    return this.findOpenedByTeamService.execute(user.id);
   }
 
   @Get()
