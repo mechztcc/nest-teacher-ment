@@ -8,7 +8,7 @@ export class FindOpenedByTeamService {
   async execute(userId: number): Promise<any> {
     const query = await this.prisma.usersOnTeams.findFirst({
       where: { userId },
-      include: { team: { include: { Lesson: true } } },
+      include: { team: { include: { Lesson: { where: { isOpened: true } } } } },
     });
 
     return query;
