@@ -11,7 +11,6 @@ export class FindQuestionService {
       include: {
         topic: { select: { name: true, id: true } },
         alternatives: true,
-        QuestionImage: { select: { name: true, path: true, id: true } },
       },
     });
   }

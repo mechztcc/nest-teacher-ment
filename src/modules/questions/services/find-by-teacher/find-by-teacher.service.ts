@@ -11,7 +11,6 @@ export class FindByTeacherService {
       include: {
         topic: { select: { name: true } },
         alternatives: { select: { title: true, isCorrect: true } },
-        QuestionImage: { select: { name: true, path: true } },
       },
     });
   }

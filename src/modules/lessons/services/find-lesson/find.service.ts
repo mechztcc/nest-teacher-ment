@@ -17,7 +17,6 @@ export class FindLessonService {
               include: {
                 alternatives: true,
                 topic: { select: { id: true, name: true } },
-                QuestionImage: { select: { name: true, path: true } },
               },
             },
           },
