@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsNumber, Max, max } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, Max } from 'class-validator';
 
 export class CreateQuestionDto {
   @IsNotEmpty()
