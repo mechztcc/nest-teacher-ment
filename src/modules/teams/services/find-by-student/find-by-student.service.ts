@@ -6,17 +6,35 @@ export class FindByStudentService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(userId: number): Promise<any> {
-    const query = await this.prisma.usersOnTeams.findFirst({
+    const query = await this.prisma.usersOnTeams.findMany({
       where: { userId },
-      include: { user: true, team: true },
+      include: {
+        user: true,
+        team: {
+          include: {
+            UsersOnTeams: { include: { user: true } },
+            TeamRank: {
+              include: { teamRankMember: { where: { user: { id: userId } } } },
+            },
+          },
+        },
+      },
     });
 
-    query.user.password = null;
+    const password = (query[0].user.password = null);
 
     return {
-      user: query.user,
-      team: query.team,
-      createdAt: query.createdAt
+      user: {
+        ...query[0]?.user,
+        password,
+      },
+      teams: query.map((el) => {
+        return {
+          id: el.team.id,
+          name: el.team.name,
+          score: el.team.TeamRank?.teamRankMember[0].score ?? 0,
+        };
+      }),
     };
   }
 }
