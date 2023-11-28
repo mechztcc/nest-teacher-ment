@@ -14,6 +14,7 @@ export class TasksService {
       where: { isOpened: true },
       include: { ExpirationDate: { select: { expiresAt: true } } },
     });
+    
     lessons.map(async (lesson) => {
       const now = new Date();
       const date = new Date(lesson.ExpirationDate[0].expiresAt);
