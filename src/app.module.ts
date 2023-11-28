@@ -10,6 +10,8 @@ import { QuestionsModule } from './modules/questions/questions.module';
 import { TeamsModule } from './modules/teams/teams.module';
 import { TopicModule } from './modules/topic/topic.module';
 import { UsersModule } from './modules/users/users.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksService } from './shared/services/tasks/tasks.service';
 
 @Module({
   imports: [
@@ -22,8 +24,9 @@ import { UsersModule } from './modules/users/users.module';
     LessonsModule,
     DifficultiesModule,
     ProfileModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, TasksService],
 })
 export class AppModule {}
