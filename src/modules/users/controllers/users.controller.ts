@@ -12,6 +12,7 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { CreateUserService } from '../services/create/create.service';
 import { InformationsService } from '../services/informations/informations/informations.service';
 import { FindByEmailService } from '../services/find-by-email/find-by-email.service';
+import { FindByIdService } from '../services/find-by-id/find-by-id.service';
 
 @Controller('users')
 export class UsersController {
@@ -19,6 +20,7 @@ export class UsersController {
     private readonly createUserService: CreateUserService,
     private readonly userInformationService: InformationsService,
     private readonly findByEmailService: FindByEmailService,
+    private readonly findByIdService: FindByIdService,
   ) {}
 
   @Post()
@@ -34,10 +36,13 @@ export class UsersController {
     return await this.userInformationService.execute(user.id);
   }
 
-
   @Get(':email')
   async findByEmail(@Param('email') email: string) {
-    return this.findByEmailService.execute(email)
+    return this.findByEmailService.execute(email);
   }
 
+  @Get(':id/details')
+  async findById(@Param('id') id: string) {
+    return this.findByIdService.execute(Number(id));
+  }
 }

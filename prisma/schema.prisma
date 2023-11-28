@@ -12,19 +12,19 @@ datasource db {
 }
 
 model User {
-  id             Int             @id @default(autoincrement())
-  email          String          @unique
-  name           String
-  password       String
-  role           String
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  UsersOnTeams   UsersOnTeams[]
-  questions      Question[]
-  Team           Team[]
-  Lesson         Lesson[]
-  profile        Profile?
-  UserPontuation UserPontuation?
+  id           Int             @id @default(autoincrement())
+  email        String          @unique
+  name         String
+  password     String
+  role         String
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  UsersOnTeams UsersOnTeams[]
+  questions    Question[]
+  Team         Team[]
+  Lesson       Lesson[]
+  profile      Profile?
+  teamRank     TeamRankMember?
 }
 
 model Profile {
@@ -49,6 +49,27 @@ model Team {
   updatedAt      DateTime        @updatedAt
   Lesson         Lesson[]
   InvitationCode InvitationCode?
+  TeamRank       TeamRank?
+}
+
+model TeamRank {
+  id             Int              @id @default(autoincrement())
+  team           Team             @relation(fields: [teamId], references: [id])
+  teamId         Int              @unique
+  teamRankMember TeamRankMember[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model TeamRankMember {
+  id         Int       @id @default(autoincrement())
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int       @unique
+  score      Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  TeamRank   TeamRank? @relation(fields: [teamRankId], references: [id])
+  teamRankId Int?
 }
 
 model InvitationCode {
@@ -94,7 +115,6 @@ model QuestionsOnLessons {
 
   @@id([questionId, lessonId])
 }
-
 
 model Alternative {
   id         Int       @id @default(autoincrement())
@@ -144,15 +164,6 @@ model ExpirationDate {
   lesson    Lesson   @relation(fields: [lessonId], references: [id])
   lessonId  Int
   expiresAt DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model UserPontuation {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @unique
-  score     Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
