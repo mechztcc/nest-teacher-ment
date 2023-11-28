@@ -5,5 +5,8 @@ export class VerifyAswerDto {
   questionId: number;
 
   @IsNotEmpty()
+  lessonId: number;
+
+  @IsNotEmpty()
   alternativeId: number;
 }

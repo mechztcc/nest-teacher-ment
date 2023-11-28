@@ -13,6 +13,7 @@ export class AddMemberService {
   async execute(payload: AddMemberDto) {
     const teamExists = await this.prisma.team.findUnique({
       where: { id: payload.teamId },
+      include: { TeamRank: true },
     });
 
     if (!teamExists) {
@@ -38,8 +39,16 @@ export class AddMemberService {
       throw new ConflictException('Provided users already in this team.');
     }
 
-    return this.prisma.usersOnTeams.create({
+    await this.prisma.usersOnTeams.create({
       data: { teamId: payload.teamId, userId: payload.userId },
+    });
+
+    return await this.prisma.teamRankMember.create({
+      data: {
+        score: 0,
+        teamRankId: teamExists.TeamRank.id,
+        userId: payload.userId,
+      },
     });
   }
 }

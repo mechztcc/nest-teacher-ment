@@ -18,6 +18,7 @@ export class JoinTeamWithCodeService {
   async execute(payload: IRequest): Promise<any> {
     const inviteCodeExists = await this.prisma.invitationCode.findUnique({
       where: { code: payload.code },
+      include: { team: { include: { TeamRank: true } } },
     });
 
     if (!inviteCodeExists) {
@@ -41,13 +42,19 @@ export class JoinTeamWithCodeService {
     });
 
     if (userExistsOnteams) {
-      throw new ConflictException(
-        'Provided user can only have one team.',
-      );
+      throw new ConflictException('Provided user can only have one team.');
     }
 
-    return await this.prisma.usersOnTeams.create({
+    await this.prisma.usersOnTeams.create({
       data: { teamId: inviteCodeExists.teamId, userId: payload.userId },
+    });
+
+    return await this.prisma.teamRankMember.create({
+      data: {
+        score: 0,
+        teamRankId: inviteCodeExists.team.TeamRank.id,
+        userId: payload.userId,
+      },
     });
   }
 }

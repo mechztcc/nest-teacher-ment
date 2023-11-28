@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/PrismaClient';
 import { VerifyAswerDto } from '../../dto/verify-aswer.dto';
 
@@ -12,11 +16,35 @@ export class VerifyResponseService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(payload: IRequest): Promise<any> {
+    const userExists = await this.prisma.user.findUnique({
+      where: { id: payload.userId },
+    });
+
+    if (!userExists) {
+      throw new NotFoundException('Provided user has not found');
+    }
+
+    if (userExists.role === 'TEACHER') {
+      throw new UnauthorizedException('Only students can answer questions');
+    }
+
     const question = await this.prisma.question.findUnique({
       where: {
         id: payload.data.questionId,
       },
       include: { alternatives: true },
+    });
+
+    const teamRank = await this.prisma.questionsOnLessons.findUnique({
+      where: {
+        questionId_lessonId: {
+          lessonId: payload.data.lessonId,
+          questionId: payload.data.questionId,
+        },
+      },
+      include: {
+        lesson: { include: { team: { include: { TeamRank: true } } } },
+      },
     });
 
     if (!question) {
@@ -28,23 +56,20 @@ export class VerifyResponseService {
     });
 
     if (!alternative) {
-        throw new NotFoundException('Provided alternative has not found');
-      }
-
-    const pontuationExists = await this.prisma.userPontuation.findUnique({
-      where: { userId: payload.userId },
-    });
-
-    if (alternative.isCorrect && pontuationExists) {
-      await this.prisma.userPontuation.update({
-        data: { score: pontuationExists.score + question.pontuation },
-        where: { userId: payload.userId },
-      });
+      throw new NotFoundException('Provided alternative has not found');
     }
 
-    if (alternative.isCorrect && !pontuationExists) {
-      await this.prisma.userPontuation.create({
-        data: { score: question.pontuation, userId: payload.userId },
+    const score = await this.prisma.teamRankMember.findUnique({
+      where: {
+        userId: payload.userId,
+        teamRankId: teamRank.lesson.team.TeamRank.id,
+      },
+    });
+
+    if (alternative.isCorrect) {
+      await this.prisma.teamRankMember.update({
+        data: { score: score.score + question.pontuation },
+        where: { id: score.id },
       });
     }
 

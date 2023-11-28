@@ -10,7 +10,6 @@ export class FindByEmailService {
       where: { email, role: 'STUDENT' },
       include: {
         UsersOnTeams: { include: { team: true } },
-        UserPontuation: { select: { score: true } },
       },
     });
 
@@ -32,7 +31,6 @@ export class FindByEmailService {
           name: el.team.name,
         };
       }),
-      pontuation: userExists.UserPontuation.score,
     };
   }
 }
