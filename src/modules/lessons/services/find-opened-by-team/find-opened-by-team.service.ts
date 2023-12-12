@@ -12,6 +12,10 @@ export class FindOpenedByTeamService {
         team: {
           include: {
             Lesson: {
+              include: {
+                QuestionsOnLessons: { include: { question: true } },
+                difficulty: true,
+              },
               where: { isOpened: true },
             },
           },
@@ -19,8 +23,14 @@ export class FindOpenedByTeamService {
       },
     });
 
-    return {
-      lessons: query.team.Lesson
-    };
+    return query.team.Lesson.map((le) => {
+      return {
+        id: le.id,
+        name: le.name,
+        questions: le.QuestionsOnLessons.length,
+        difficulty: le.difficulty.name,
+        createdAt: le.createdAt,
+      };
+    });
   }
 }
