@@ -14,7 +14,7 @@ export class FindByStudentService {
           include: {
             UsersOnTeams: { include: { user: true } },
             TeamRank: {
-              include: { teamRankMember: { where: { user: { id: userId } } } },
+              include: { teamRankMember: { where: { user: { id: userId } }, include: { user: true} } },
             },
           },
         },
@@ -32,7 +32,13 @@ export class FindByStudentService {
         return {
           id: el.team.id,
           name: el.team.name,
-          score: el.team.TeamRank?.teamRankMember[0].score ?? 0,
+          members: el.team.TeamRank.teamRankMember.map((member) => {
+            return {
+              id: member.user.id,
+              name: member.user.name,
+              score:member.score
+            }
+          })
         };
       }),
     };
