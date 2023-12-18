@@ -12,19 +12,43 @@ datasource db {
 }
 
 model User {
-  id           Int             @id @default(autoincrement())
-  email        String          @unique
-  name         String
-  password     String
-  role         String
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-  UsersOnTeams UsersOnTeams[]
-  questions    Question[]
-  Team         Team[]
-  Lesson       Lesson[]
-  profile      Profile?
-  teamRank     TeamRankMember?
+  id                 Int                  @id @default(autoincrement())
+  email              String               @unique
+  name               String
+  password           String
+  role               String
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  UsersOnTeams       UsersOnTeams[]
+  questions          Question[]
+  Team               Team[]
+  Lesson             Lesson[]
+  profile            Profile?
+  teamRank           TeamRankMember?
+  UserHistoryLessons UserHistoryLessons[]
+}
+
+model UserHistoryLessons {
+  id        Int             @id @default(autoincrement())
+  done      Boolean
+  user      User            @relation(fields: [userId], references: [id])
+  userId    Int
+  lesson    Lesson          @relation(fields: [lessonId], references: [id])
+  lessonId  Int             @unique
+  answers   HistoryAnswer[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+model HistoryAnswer {
+  id                   Int                @id @default(autoincrement())
+  isCorrect            Boolean
+  alternative          Alternative        @relation(fields: [alternativeId], references: [id])
+  alternativeId        Int
+  question             Question           @relation(fields: [questionId], references: [id])
+  questionId           Int
+  userHistoryLesson    UserHistoryLessons @relation(fields: [userHistoryLessonId], references: [id])
+  userHistoryLessonId  Int
 }
 
 model Profile {
@@ -103,6 +127,7 @@ model Question {
   topicId            Int
   topic              Topic                @relation(fields: [topicId], references: [id])
   QuestionsOnLessons QuestionsOnLessons[]
+  HistoryAnswer      HistoryAnswer[]
 }
 
 model QuestionsOnLessons {
@@ -117,13 +142,14 @@ model QuestionsOnLessons {
 }
 
 model Alternative {
-  id         Int       @id @default(autoincrement())
-  title      String
-  isCorrect  Boolean   @default(false)
-  question   Question? @relation(fields: [questionId], references: [id])
-  questionId Int?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id            Int             @id @default(autoincrement())
+  title         String
+  isCorrect     Boolean         @default(false)
+  question      Question?       @relation(fields: [questionId], references: [id])
+  questionId    Int?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  HistoryAnswer HistoryAnswer[]
 }
 
 model Topic {
@@ -148,6 +174,7 @@ model Lesson {
   updatedAt          DateTime             @updatedAt
   QuestionsOnLessons QuestionsOnLessons[]
   ExpirationDate     ExpirationDate[]
+  UserHistoryLessons UserHistoryLessons[]
 }
 
 model Difficulty {

@@ -11,11 +11,13 @@ import {
 } from '@nestjs/common';
 import { AuthorizationInterceptor } from 'src/shared/interceptors/authorization/authorization.interceptor';
 import { AddQuestionDto } from '../dto/add-question.dto';
+import { ComputingLessonResultDto } from '../dto/computing-lesson-result.dto';
 import { CreateLessonDto } from '../dto/create-lesson.dto';
 import { OpenQuestionDto } from '../dto/open-question.dto';
 import { UpdateLessonDto } from '../dto/update-lesson.dto';
 import { AddQuestionService } from '../services/add-question/add-question.service';
 import { CloseLessonService } from '../services/close-lesson/close-lesson.service';
+import { ComputingResultService } from '../services/computing-result/computing-result.service';
 import { CreateLessonService } from '../services/create-lesson/create-lesson.service';
 import { FindLessonService } from '../services/find-lesson/find.service';
 import { FindOpenedByTeamService } from '../services/find-opened-by-team/find-opened-by-team.service';
@@ -23,6 +25,7 @@ import { IndexLessonsService } from '../services/index-lessons/index-lessons.ser
 import { OpenLessonService } from '../services/open-lesson/open-lesson.service';
 import { RemoveQuestionService } from '../services/remove-question/remove-question.service';
 import { UpdateLessonService } from '../services/update-lesson/update-lesson.service';
+import { CompleteLessonService } from '../services/complete-lesson/complete-lesson.service';
 
 @Controller('lessons')
 export class LessonsController {
@@ -36,6 +39,8 @@ export class LessonsController {
     private readonly closeLessonService: CloseLessonService,
     private readonly findOpenedByTeamService: FindOpenedByTeamService,
     private readonly updateLessonService: UpdateLessonService,
+    private readonly computingResultService: ComputingResultService,
+    private readonly completeLessonService: CompleteLessonService,
   ) {}
 
   @Post()
@@ -59,6 +64,20 @@ export class LessonsController {
     return this.addQuestionService.execute(payload);
   }
 
+  @Post('computing-result')
+  @UseInterceptors(AuthorizationInterceptor)
+  computingResult(
+    @Body() payload: ComputingLessonResultDto,
+    @Headers() headers,
+  ) {
+    const { user } = headers;
+
+    return this.computingResultService.execute({
+      data: payload,
+      userId: user.id,
+    });
+  }
+
   @Put('remove-question')
   removeQuestion(@Body() payload: AddQuestionDto) {
     return this.removeQuestionService.execute(payload);
@@ -67,6 +86,12 @@ export class LessonsController {
   @Get(':id')
   find(@Param('id') id: string) {
     return this.findLesson.execute(Number(id));
+  }
+
+  @Get('complete-lesson/:id')
+  @UseInterceptors(AuthorizationInterceptor)
+  completeLesson(@Param('id') id: string) {
+    return this.completeLessonService.execute(Number(id));
   }
 
   @Get('student/find-by-user')

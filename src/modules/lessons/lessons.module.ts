@@ -10,10 +10,12 @@ import { OpenLessonService } from './services/open-lesson/open-lesson.service';
 import { CloseLessonService } from './services/close-lesson/close-lesson.service';
 import { FindOpenedByTeamService } from './services/find-opened-by-team/find-opened-by-team.service';
 import { UpdateLessonService } from './services/update-lesson/update-lesson.service';
+import { ComputingResultService } from './services/computing-result/computing-result.service';
+import { CompleteLessonService } from './services/complete-lesson/complete-lesson.service';
 
 @Module({
   controllers: [LessonsController],
-  providers: [CreateLessonService, FindLessonService, IndexLessonsService, AddQuestionService, RemoveQuestionService, OpenLessonService, CloseLessonService, FindOpenedByTeamService, UpdateLessonService],
+  providers: [CreateLessonService, FindLessonService, IndexLessonsService, AddQuestionService, RemoveQuestionService, OpenLessonService, CloseLessonService, FindOpenedByTeamService, UpdateLessonService, ComputingResultService, CompleteLessonService],
   imports: [PrismaModule],
 })
 export class LessonsModule {}
