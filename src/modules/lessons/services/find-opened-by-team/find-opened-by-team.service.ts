@@ -16,7 +16,10 @@ export class FindOpenedByTeamService {
                 QuestionsOnLessons: { include: { question: true } },
                 difficulty: true,
               },
-              where: { isOpened: true },
+              where: {
+                isOpened: true,
+                UserHistoryLessons: { every: { done: false } },
+              },
             },
           },
         },
