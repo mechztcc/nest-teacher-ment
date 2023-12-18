@@ -26,6 +26,7 @@ import { OpenLessonService } from '../services/open-lesson/open-lesson.service';
 import { RemoveQuestionService } from '../services/remove-question/remove-question.service';
 import { UpdateLessonService } from '../services/update-lesson/update-lesson.service';
 import { CompleteLessonService } from '../services/complete-lesson/complete-lesson.service';
+import { VerifyRunningQuestionsStatusService } from '../services/verify-running-questions-status/verify-running-questions-status.service';
 
 @Controller('lessons')
 export class LessonsController {
@@ -41,6 +42,7 @@ export class LessonsController {
     private readonly updateLessonService: UpdateLessonService,
     private readonly computingResultService: ComputingResultService,
     private readonly completeLessonService: CompleteLessonService,
+    private readonly verifyRunningLessonStatus: VerifyRunningQuestionsStatusService,
   ) {}
 
   @Post()
@@ -92,6 +94,17 @@ export class LessonsController {
   @UseInterceptors(AuthorizationInterceptor)
   completeLesson(@Param('id') id: string) {
     return this.completeLessonService.execute(Number(id));
+  }
+
+  @Get('verify-running-lesson/:id')
+  @UseInterceptors(AuthorizationInterceptor)
+  verifyRunningLesson(@Param('id') id: string, @Headers() headers) {
+    const { user } = headers;
+
+    return this.verifyRunningLessonStatus.execute({
+      lessonId: Number(id),
+      userId: user.id,
+    });
   }
 
   @Get('student/find-by-user')
