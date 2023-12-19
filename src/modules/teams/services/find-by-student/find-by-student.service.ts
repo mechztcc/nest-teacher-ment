@@ -12,9 +12,9 @@ export class FindByStudentService {
         user: true,
         team: {
           include: {
-            UsersOnTeams: { include: { user: true } },
+            UsersOnTeams: { include: { user: { include: {  Team: true }} } },
             TeamRank: {
-              include: { teamRankMember: { where: { user: { id: userId } }, include: { user: true} } },
+              include: { teamRankMember: { include: { user: true }, orderBy: { score: 'desc' } } },
             },
           },
         },
@@ -22,6 +22,9 @@ export class FindByStudentService {
     });
 
     const password = (query[0].user.password = null);
+
+    console.log(query[0].team.UsersOnTeams[0].user.Team);
+    
 
     return {
       user: {
@@ -36,7 +39,7 @@ export class FindByStudentService {
             return {
               id: member.user.id,
               name: member.user.name,
-              score:member.score
+              score: member.score
             }
           })
         };
