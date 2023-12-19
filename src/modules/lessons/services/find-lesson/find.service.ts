@@ -21,9 +21,7 @@ export class FindLessonService {
               },
             },
           },
-          where: {
-            question: { HistoryAnswer: { none: { question: { id } } } },
-          },
+          
         },
       },
     });

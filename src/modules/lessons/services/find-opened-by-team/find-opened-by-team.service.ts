@@ -18,7 +18,7 @@ export class FindOpenedByTeamService {
               },
               where: {
                 isOpened: true,
-                UserHistoryLessons: { every: { done: false } },
+                UserHistoryLessons: { every: { userId: { not: userId }} },
               },
             },
           },
