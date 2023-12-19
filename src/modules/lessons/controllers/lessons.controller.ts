@@ -92,8 +92,13 @@ export class LessonsController {
 
   @Get('complete-lesson/:id')
   @UseInterceptors(AuthorizationInterceptor)
-  completeLesson(@Param('id') id: string) {
-    return this.completeLessonService.execute(Number(id));
+  completeLesson(@Param('id') id: string, @Headers() headers) {
+    const { user } = headers;
+
+    return this.completeLessonService.execute({
+      lessonId: Number(id),
+      userId: user.id,
+    });
   }
 
   @Get('verify-running-lesson/:id')

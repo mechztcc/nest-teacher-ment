@@ -12,13 +12,13 @@ export class ComputingResultService {
 
   async execute({ data, userId }: IRequest): Promise<any> {
     const history = await this.prisma.userHistoryLessons.findUnique({
-      where: { lessonId: data.lessonId },
+      where: { lessonId: data.lessonId, userId },
       include: { answers: true },
     });
     if (!history) {
       await this.prisma.userHistoryLessons.create({
         data: {
-          done: data.done,
+          done: false,
           lessonId: data.lessonId,
           userId,
           answers: {
@@ -33,7 +33,6 @@ export class ComputingResultService {
     }
 
     if (history) {
-      history.done = data.done;
       await this.prisma.historyAnswer.create({
         data: {
           alternativeId: data.answer.alternativeId,
