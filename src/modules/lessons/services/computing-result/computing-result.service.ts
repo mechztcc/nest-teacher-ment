@@ -48,10 +48,14 @@ export class ComputingResultService {
       where: { userId },
     });
 
+    const question = await this.prisma.question.findUnique({
+      where: { id: data.answer.questionId },
+    });
+
     if (data.answer.isCorrect) {
       await this.prisma.teamRankMember.update({
         where: { userId },
-        data: { score: rank.score + 1 },
+        data: { score: rank.score + question.pontuation },
       });
     }
 
