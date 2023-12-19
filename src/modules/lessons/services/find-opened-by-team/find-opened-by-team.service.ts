@@ -17,8 +17,16 @@ export class FindOpenedByTeamService {
                 difficulty: true,
               },
               where: {
-                isOpened: true,
-                UserHistoryLessons: { every: { userId: { not: userId }} },
+                OR: [
+                  {
+                    isOpened: true,
+                    UserHistoryLessons: { some: { done: false } },
+                  },
+                  {
+                    isOpened: true,
+                    UserHistoryLessons: { none: { userId } },
+                  },
+                ],
               },
             },
           },
