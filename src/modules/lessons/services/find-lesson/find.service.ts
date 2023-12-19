@@ -16,9 +16,13 @@ export class FindLessonService {
             question: {
               include: {
                 alternatives: true,
+                HistoryAnswer: true,
                 topic: { select: { id: true, name: true } },
               },
             },
+          },
+          where: {
+            question: { HistoryAnswer: { none: { question: { id } } } },
           },
         },
       },

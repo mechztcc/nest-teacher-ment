@@ -9,10 +9,13 @@ interface IRequest {
 export class VerifyRunningQuestionsStatusService {
   constructor(private readonly prisma: PrismaService) {}
 
-  execute({ lessonId, userId }: IRequest): Promise<any> {
-    return this.prisma.userHistoryLessons.findUnique({
+  async execute({ lessonId, userId }: IRequest): Promise<any> {
+    const query = await this.prisma.userHistoryLessons.findUnique({
       where: { lessonId, userId },
       include: { answers: true },
     });
+
+    console.log(query);
+    return query;
   }
 }
