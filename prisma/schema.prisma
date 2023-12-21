@@ -24,7 +24,7 @@ model User {
   Team               Team[]
   Lesson             Lesson[]
   profile            Profile?
-  teamRank           TeamRankMember?
+  teamRank           TeamRankMember[]
   UserHistoryLessons UserHistoryLessons[]
 }
 
@@ -34,24 +34,23 @@ model UserHistoryLessons {
   user      User            @relation(fields: [userId], references: [id])
   userId    Int
   lesson    Lesson          @relation(fields: [lessonId], references: [id])
-  lessonId  Int             
+  lessonId  Int
   answers   HistoryAnswer[]
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
 
   @@unique([userId, lessonId])
-  
 }
 
 model HistoryAnswer {
-  id                   Int                @id @default(autoincrement())
-  isCorrect            Boolean
-  alternative          Alternative        @relation(fields: [alternativeId], references: [id])
-  alternativeId        Int
-  question             Question           @relation(fields: [questionId], references: [id])
-  questionId           Int
-  userHistoryLesson    UserHistoryLessons @relation(fields: [userHistoryLessonId], references: [id])
-  userHistoryLessonId  Int
+  id                  Int                @id @default(autoincrement())
+  isCorrect           Boolean
+  alternative         Alternative        @relation(fields: [alternativeId], references: [id])
+  alternativeId       Int
+  question            Question           @relation(fields: [questionId], references: [id])
+  questionId          Int
+  userHistoryLesson   UserHistoryLessons @relation(fields: [userHistoryLessonId], references: [id])
+  userHistoryLessonId Int
 }
 
 model Profile {
@@ -91,12 +90,14 @@ model TeamRank {
 model TeamRankMember {
   id         Int       @id @default(autoincrement())
   user       User      @relation(fields: [userId], references: [id])
-  userId     Int       @unique
+  userId     Int
   score      Int
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   TeamRank   TeamRank? @relation(fields: [teamRankId], references: [id])
   teamRankId Int?
+
+  @@unique([userId, teamRankId])
 }
 
 model InvitationCode {
@@ -196,4 +197,12 @@ model ExpirationDate {
   expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Log {
+  id          Int      @id @default(autoincrement())
+  status       String
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

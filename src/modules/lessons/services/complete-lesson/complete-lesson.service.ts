@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/PrismaClient';
 
 interface IRequest {
@@ -11,12 +11,11 @@ export class CompleteLessonService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute({ lessonId, userId }: IRequest): Promise<any> {
-    const history = this.prisma.userHistoryLessons.findUnique({
+    const history = this.prisma.userHistoryLessons.findFirst({
       where: { lessonId, userId },
     });
 
-
-    return await this.prisma.userHistoryLessons.update({
+    return await this.prisma.userHistoryLessons.updateMany({
       data: { done: true },
       where: { lessonId, userId },
     });

@@ -11,8 +11,8 @@ export class ComputingResultService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute({ data, userId }: IRequest): Promise<any> {
-    const history = await this.prisma.userHistoryLessons.findUnique({
-      where: { lessonId: data.lessonId, userId },
+    const history = await this.prisma.userHistoryLessons.findFirst({
+      where: { userId, lessonId: data.lessonId },
       include: { answers: true },
     });
     if (!history) {
@@ -43,8 +43,13 @@ export class ComputingResultService {
       });
     }
 
-    const rank = await this.prisma.teamRankMember.findUnique({
-      where: { userId },
+    const lesson = await this.prisma.lesson.findUnique({
+      where: { id: data.lessonId },
+      include: { team: { include: { TeamRank: { include: { teamRankMember: { where: { userId }} }} } } },
+    });
+
+    const rank = await this.prisma.teamRankMember.findFirst({
+      where: { userId, teamRankId: lesson.team.TeamRank.id },
     });
 
     const question = await this.prisma.question.findUnique({
@@ -52,8 +57,8 @@ export class ComputingResultService {
     });
 
     if (data.answer.isCorrect) {
-      await this.prisma.teamRankMember.update({
-        where: { userId },
+      await this.prisma.teamRankMember.updateMany({
+        where: { userId, teamRankId: lesson.team.TeamRank.id },
         data: { score: rank.score + question.pontuation },
       });
     }

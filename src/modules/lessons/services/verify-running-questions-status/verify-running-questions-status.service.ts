@@ -10,12 +10,11 @@ export class VerifyRunningQuestionsStatusService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute({ lessonId, userId }: IRequest): Promise<any> {
-    const query = await this.prisma.userHistoryLessons.findUnique({
+    const query = await this.prisma.userHistoryLessons.findFirst({
       where: { lessonId, userId },
       include: { answers: true },
     });
 
-    console.log(query);
     return query;
   }
 }

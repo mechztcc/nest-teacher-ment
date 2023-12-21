@@ -59,7 +59,7 @@ export class VerifyResponseService {
       throw new NotFoundException('Provided alternative has not found');
     }
 
-    const score = await this.prisma.teamRankMember.findUnique({
+    const score = await this.prisma.teamRankMember.findFirst({
       where: {
         userId: payload.userId,
         teamRankId: teamRank.lesson.team.TeamRank.id,
