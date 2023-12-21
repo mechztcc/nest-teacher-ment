@@ -45,7 +45,13 @@ export class ComputingResultService {
 
     const lesson = await this.prisma.lesson.findUnique({
       where: { id: data.lessonId },
-      include: { team: { include: { TeamRank: { include: { teamRankMember: { where: { userId }} }} } } },
+      include: {
+        team: {
+          include: {
+            TeamRank: { include: { teamRankMember: { where: { userId } } } },
+          },
+        },
+      },
     });
 
     const rank = await this.prisma.teamRankMember.findFirst({
@@ -56,10 +62,20 @@ export class ComputingResultService {
       where: { id: data.answer.questionId },
     });
 
-    if (data.answer.isCorrect) {
+    if (data.answer.isCorrect && rank) {
       await this.prisma.teamRankMember.updateMany({
         where: { userId, teamRankId: lesson.team.TeamRank.id },
         data: { score: rank.score + question.pontuation },
+      });
+    }
+
+    if (data.answer.isCorrect && !rank) {
+      await this.prisma.teamRankMember.create({
+        data: {
+          score: question.pontuation,
+          userId,
+          teamRankId: lesson.team.TeamRank.id,
+        },
       });
     }
 

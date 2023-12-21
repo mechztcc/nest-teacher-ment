@@ -17,14 +17,20 @@ export class FindOpenedByTeamService {
                 difficulty: true,
               },
               where: {
+                isOpened: true,
                 OR: [
                   {
-                    isOpened: true,
-                    UserHistoryLessons: { some: { done: false } },
+                    UserHistoryLessons: {
+                      none: { user: { id: userId } }, // Retorna Lessons onde UserHistoryLessons não exista para o usuário específico
+                    },
                   },
                   {
-                    isOpened: true,
-                    UserHistoryLessons: { none: { userId } },
+                    UserHistoryLessons: {
+                      some: {
+                        user: { id: userId },
+                        done: false, // Retorna Lessons onde UserHistoryLessons tem done como false para o usuário específico
+                      },
+                    },
                   },
                 ],
               },
@@ -33,7 +39,6 @@ export class FindOpenedByTeamService {
         },
       },
     });
-
 
     const lessons = [];
     query.map((query) => {
