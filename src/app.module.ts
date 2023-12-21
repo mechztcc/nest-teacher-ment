@@ -12,6 +12,7 @@ import { TopicModule } from './modules/topic/topic.module';
 import { UsersModule } from './modules/users/users.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TasksService } from './shared/services/tasks/tasks.service';
+import { PerformancesModule } from './modules/performances/performances.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TasksService } from './shared/services/tasks/tasks.service';
     DifficultiesModule,
     ProfileModule,
     ScheduleModule.forRoot(),
+    PerformancesModule,
   ],
   controllers: [AppController],
   providers: [AppService, TasksService],
