@@ -79,6 +79,16 @@ export class ComputingResultService {
       });
     }
 
+    await this.prisma.userPerformanceHistory.create({
+      data: {
+        hit: data.answer.isCorrect,
+        lessonId: data.lessonId,
+        questionId: data.answer.questionId,
+        teamId: lesson.teamId,
+        userId,
+      },
+    });
+
     return history;
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/modules/prisma/PrismaClient';
 
 @Injectable()
@@ -12,19 +12,25 @@ export class FindByStudentService {
         user: true,
         team: {
           include: {
-            UsersOnTeams: { include: { user: { include: {  Team: true }} } },
+            UsersOnTeams: { include: { user: { include: { Team: true } } } },
             TeamRank: {
-              include: { teamRankMember: { include: { user: true }, orderBy: { score: 'desc' } } },
+              include: {
+                teamRankMember: {
+                  include: { user: true },
+                  orderBy: { score: 'desc' },
+                },
+              },
             },
           },
         },
       },
     });
 
-    const password = (query[0].user.password = null);
+    if (!query[0]) {
+      throw new NotFoundException('Provided user dot have a Team');
+    }
 
-    console.log(query[0].team.UsersOnTeams[0].user.Team);
-    
+    const password = (query[0].user.password = null);
 
     return {
       user: {
@@ -39,9 +45,9 @@ export class FindByStudentService {
             return {
               id: member.user.id,
               name: member.user.name,
-              score: member.score
-            }
-          })
+              score: member.score,
+            };
+          }),
         };
       }),
     };
