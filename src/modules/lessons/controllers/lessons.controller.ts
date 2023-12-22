@@ -7,7 +7,7 @@ import {
   Patch,
   Post,
   Put,
-  UseInterceptors,
+  UseInterceptors
 } from '@nestjs/common';
 import { AuthorizationInterceptor } from 'src/shared/interceptors/authorization/authorization.interceptor';
 import { AddQuestionDto } from '../dto/add-question.dto';
@@ -17,6 +17,7 @@ import { OpenQuestionDto } from '../dto/open-question.dto';
 import { UpdateLessonDto } from '../dto/update-lesson.dto';
 import { AddQuestionService } from '../services/add-question/add-question.service';
 import { CloseLessonService } from '../services/close-lesson/close-lesson.service';
+import { CompleteLessonService } from '../services/complete-lesson/complete-lesson.service';
 import { ComputingResultService } from '../services/computing-result/computing-result.service';
 import { CreateLessonService } from '../services/create-lesson/create-lesson.service';
 import { FindLessonService } from '../services/find-lesson/find.service';
@@ -25,7 +26,6 @@ import { IndexLessonsService } from '../services/index-lessons/index-lessons.ser
 import { OpenLessonService } from '../services/open-lesson/open-lesson.service';
 import { RemoveQuestionService } from '../services/remove-question/remove-question.service';
 import { UpdateLessonService } from '../services/update-lesson/update-lesson.service';
-import { CompleteLessonService } from '../services/complete-lesson/complete-lesson.service';
 import { VerifyRunningQuestionsStatusService } from '../services/verify-running-questions-status/verify-running-questions-status.service';
 
 @Controller('lessons')

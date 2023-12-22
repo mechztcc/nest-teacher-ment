@@ -12,8 +12,6 @@ export class UpdateLessonService {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(payload: IRequest): Promise<any> {
-    console.log(payload);
-
     const lessonExists = await this.prisma.lesson.findUnique({
       where: { id: payload.lessonId },
     });

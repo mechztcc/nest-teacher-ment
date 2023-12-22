@@ -1,6 +1,7 @@
-import { Controller, Get, Headers, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Headers, Req, UseInterceptors } from '@nestjs/common';
 import { GeneralScoresService } from '../services/general-scores/general-scores.service';
 import { AuthorizationInterceptor } from 'src/shared/interceptors/authorization/authorization.interceptor';
+import { Request } from 'express';
 
 @Controller('performances')
 export class PerformancesController {
@@ -8,9 +9,8 @@ export class PerformancesController {
 
   @Get()
   @UseInterceptors(AuthorizationInterceptor)
-  async generalPerformanceByStudent(@Headers() headers) {
+  async generalPerformanceByStudent(@Headers() headers, @Req() req: Request) {
     const { user } = headers;
-
     return await this.generalScoresService.execute(user.id);
   }
 }
